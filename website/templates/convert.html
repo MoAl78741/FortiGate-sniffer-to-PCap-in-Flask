@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Sniffer Output to Pcap</title>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="table-wrapper" align="center">
+    <h1 style="text-align: center">Sniffer Output to Pcap</h1>
+    {%  if tasks|length < 1 %}
+
+    {%  else %}
+
+    <table class='table table-striped' align="center" id="main_table">
+       <thead>
+        <tr>
+            <th scope="col">Date Added</th>
+            <th scope="col">File Name</th>
+            <th scope="col">PreConverted File</th>
+            <th scope="col">PCAP File</th>
+            <th scope="col">Actions</th>
+        </tr></thead>
+        <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td title="Date Added">{{ task.date_created.date() }}</td>
+            <td title="File Name">{{  task.content }}</td>
+            <td title="PreConverted File"><a href="/downloadpre/{{task.id}}">
+                 {{ task.content }}
+                </a></td>
+            <td title="PCAP File">
+            {%  if task.data_converted is none %}
+            <a href="/convert/{{task.id}}">
+                Click to Convert </a>
+            {%  else %}
+            <a href="/downloadpost/{{task.id}}">
+            Download PCAP</a>
+            {%  endif %}</td>
+
+            <td title="Action">
+                <a href="/delete/{{task.id}}">Delete</a>
+                <br>
+                
+
+
+                <a href="/update/{{task.id}}" name="id-target" data-toggle="modal" data-target="#rename-input-box">Rename</a>
+
+                <div class="modal fade" id="rename-input-box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Rename File</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="/update/{{task.id}}" method="post" id="form-content">
+                            <div class="form-group">
+                              <label for="label-content" class="col-form-label">New file name:</label>
+                              <textarea name="txt-content" class="form-control" id="txt-content"></textarea>
+                            
+                            </div>
+                          
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary" name="submit" value="content">Confirm rename</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+            
+
+
+                <br>
+                {%  if task.data_converted is not none %}
+                {% else %}
+                <a href="/convert/{{task.id}}">Convert</a>
+                {%  endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {%  endif %}
+
+</div>
+<div id="sumbit_form" align="center">
+    <form action="/upload/" method="POST" enctype="multipart/form-data" id="InputForm">
+    <input type="file" id="InputFile" accept="text/*" name="InputFile" onchange="InputForm.submit()">
+
+    </form>
+</div>
+
+
+{% endblock %}
+
