@@ -25,6 +25,8 @@
         </tr></thead>
         <tbody>
         {% for task in tasks %}
+        {%  if task.user_id == user.id %}
+
         <tr>
             <td title="Date Added">{{ task.date_created.date() }}</td>
             <td title="File Name">{{  task.content }}</td>
@@ -79,6 +81,7 @@
                 {%  endif %}
             </td>
         </tr>
+        {%  endif %}
         {% endfor %}
         </tbody>
     </table>

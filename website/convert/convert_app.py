@@ -26,7 +26,6 @@ def upload():
         task_content = request.files['InputFile']
         try:
             new_task = Conversion(content=task_content.filename, data=task_content.read(), user_id=current_user.id)
-            print(new_task)
             db.session.add(new_task)
             db.session.commit()
             flash('File added!', category='success')
@@ -59,6 +58,7 @@ def rename():
         if task.user_id == current_user.id:
             task.content = newName
             db.session.commit()
+            flash('File renamed!', category='success')
     return jsonify({})
 
 

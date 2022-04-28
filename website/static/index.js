@@ -9,10 +9,10 @@ function deleteNote(noteId) {
 
 
 // <-- Rename a task 
-var renameTaskId; 
+let renameTaskId; 
 
 function renameFile() {
-  var newname = document.getElementById("txt-content").value;
+  let newname = document.getElementById("txt-content").value;
   id = renameTaskId;
   fetch("/rename/", {
     method: "POST",
