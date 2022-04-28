@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, request, redirect, send_from_directory, send_file, flash
+from flask import Flask, Blueprint, render_template, request, redirect, send_from_directory, send_file, flash, jsonify
 from flask_login import login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -8,6 +8,7 @@ import base64
 from .sniffer_converter import convert2pcap
 from ..models import Conversion
 from .. import db
+import json
 
 
 
@@ -47,21 +48,20 @@ def delete(id):
     except:
         return "Could not delete task"
 
-@conv.route('/update/<int:id>', methods=['POST'])
+@conv.route('/rename/', methods=['POST'])
 @login_required
-def update(id):
-    task_to_update = Conversion.query.get_or_404(id)
-    if request.method == 'POST':
-        try:
-            new_name = request.form.get('txt-content')
-            task_to_update.content = new_name
+def rename():
+    task = json.loads(request.data)
+    taskId = task['id']
+    newName = task['newname']
+    task = Conversion.query.get_or_404(taskId)
+    if task:
+        if task.user_id == current_user.id:
+            task.content = newName
             db.session.commit()
-            flash(f'File renamed to {new_name} !', category='success')
-            return redirect('/upload')
-        except:
-            return 'Could not rename file'
-    else:
-        return redirect('/upload')
+    return jsonify({})
+
+
 
 @conv.route('/convert/<int:id>', methods=['GET'])
 def convert(id):

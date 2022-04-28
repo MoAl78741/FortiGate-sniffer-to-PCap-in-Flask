@@ -43,11 +43,9 @@
             <td title="Action">
                 <a href="/delete/{{task.id}}">Delete</a>
                 <br>
+
+                <a href =""  onClick="renameFileTaskId({{task.id}})" name="id-target" data-toggle="modal" data-target="#rename-input-box">Rename</a>
                 
-
-
-                <a href="/update/{{task.id}}" name="id-target" data-toggle="modal" data-target="#rename-input-box">Rename</a>
-
                 <div class="modal fade" id="rename-input-box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
@@ -58,16 +56,14 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                          <form action="/update/{{task.id}}" method="post" id="form-content">
+                          <form method="get" id="form-content">
                             <div class="form-group">
                               <label for="label-content" class="col-form-label">New file name:</label>
                               <textarea name="txt-content" class="form-control" id="txt-content"></textarea>
-                            
                             </div>
-                          
                         </div>
                         <div class="modal-footer">
-                          <button type="submit" class="btn btn-primary" name="submit" value="content">Confirm rename</button>
+                          <button type="submit" onClick="renameFile()" class="btn btn-primary" name="submit" value="content">Confirm rename</button>
                         </div>
                       </div>
                     </div>
