@@ -124,13 +124,6 @@ followMode:
 	}
 
 
-#Attempt to write to file 
-#my $filename_wr = '/Volumes/KINGSTON_64/Dropbox/VSCode_Projects/sniffer_to_pcap_flask/FortiGate-sniffer-to-PCap-in-Flask/FortiGate-sniffer-to-PCap-in-Flask/website/convert/pcap_conversion_files/samples/output.txt';
-#open(FH, '>', $filename_wr) or die $!;
-#print FH $fh_out;
-#close(FH);
-#print "Writing to file successfully!\n";
-
 	if( $debug ) {
 		print STDERR "Output file to load in Ethereal is \'".$out."\'\n";
 		print STDERR "End of script\n";
