@@ -28,7 +28,7 @@
 # Title to copyright in this software and any associated documentation will at
 # all times remain with copyright holders.
 #
-# Copyright: Fortinet Inc - 2005-2017
+# Copyright: Fortinet Inc - 2005-2019
 #
 
 # Fortinet EMEA Support
@@ -36,7 +36,7 @@
 # can be opened by Wireshark. It uses the text2pcap binary included in the Ethereal package.
 # It is supplied as is and no technical support will be provided for it.
 
-  my $version 		      = "Aug 10 2017";
+  my $version 		      = "Sep 05 2019";
 
   use strict;
   use Getopt::Long;
@@ -64,7 +64,7 @@
   # our stdout into wireshark stdin, which is not allowed by the OS...
   # The trick consists in creating a child process with the appropriate anonymous
   # pipes already in place and delegate the work to the child.
-  spawnPipedProcess();
+#   spawnPipedProcess();
 
   open(fh_in,  '<', $in)  or die "Cannot open file ".$in." for reading\n";
 
@@ -119,19 +119,27 @@ followMode:
 		my $filename_in = $outfilenameList{$intf};
 		my $filename_out = $filename_in;
 		$filename_out    =~ s/\.tmp$/\.pcap/;
-		system("$text2pcap $filename_in $filename_out");
+        system("$filename_in > $filename_out")
+		# system("$text2pcap $filename_in $filename_out");
 		unlink($filename_in);
 	}
 
 
+#Attempt to write to file 
+#my $filename_wr = '/Volumes/KINGSTON_64/Dropbox/VSCode_Projects/sniffer_to_pcap_flask/FortiGate-sniffer-to-PCap-in-Flask/FortiGate-sniffer-to-PCap-in-Flask/website/convert/pcap_conversion_files/samples/output.txt';
+#open(FH, '>', $filename_wr) or die $!;
+#print FH $fh_out;
+#close(FH);
+#print "Writing to file successfully!\n";
+
 	if( $debug ) {
 		print STDERR "Output file to load in Ethereal is \'".$out."\'\n";
 		print STDERR "End of script\n";
-	}
-
+	
+}
 
 sub isHexData   { /^\s*(0x[0-9a-f]+:?[ \t\xa0]+)/ }
-sub isTimeStamp { /^(?:\d{2}:\d{2}:)?[0-9]+[\.\-][0-9]+/      }
+sub isTimeStamp { /^(?:\[\S+\] )?(?:\d{2}:\d{2}:)?[0-9]+[\.\-][0-9]+/      }
 
 sub buildPacketArray {
 	my $line = 0;
@@ -191,12 +199,16 @@ sub convertTimeStamp {
 sub getOutputFileHandler
 {
     my ($currIntf) =  $_ =~ / (\S+) (?:out|in) /;
-    $currIntf = "[noIntf]" if $currIntf eq "";
-    if( not defined( $outfileList{$currIntf} )) {
+    my ($currFIM)  =  $_ =~ /^\[(\S+)\]/;
+    
+    $currIntf ||= "[noIntf]";
+    $currIntf   = "$currFIM.$currIntf" if $currFIM;
+    
+    if( not defined( $outfileList{"$currIntf"} )) {
         my $filename = $out ? $out : $in;
         $filename =~ s/\.zip$//g;
         my $suffix = ".$currIntf.tmp";
-        $suffix    =~ s/\//-/g;     # Escape '/' char in interface name
+        $suffix    =~ s!/!-!g;     # Escape '/' char in interface name
         $filename .= $suffix;
         open( $outfileList{$currIntf}, "> $filename");
         $outfilenameList{$currIntf} = $filename;
@@ -213,8 +225,8 @@ sub getOutputFileHandler
 #     - Removes internal Fortigate tag when capture interface is any.
 #
 sub adjustPacket {
-  stripBytes( 12, 2 ) if ( join("",@packetArray[14..15]) =~ /0800|8893/);
-  addHdrMAC()         if ( join("",@packetArray[0..1])   =~ /45[01]0/);
+  stripBytes( 12, 2 ) if join("",@packetArray[14..15]) =~ /0800|8893/;
+  addHdrMAC()         if join("",@packetArray[0..1])   =~ /45[01]0/;
   if ( join(@packetArray[12..13]) =~ /8890|8891/ ) {
 	$packetArray[12] = "08";
 	$packetArray[13] = "00";
@@ -269,23 +281,27 @@ sub spawnPipedProcess
 {
     # Spawn a new process to pipe ourselves with text2pcap
     my( $fgt2eth, $text2pcap, $wireshark );
+    # my( $fgt2eth, $text2pcap, $wireshark, $output_filewr );
+    # my( $fgt2eth, $output_filewr );
 
     # Are we already in the pipelined session ?
     return if $childProcess or $demux;
 
     $fgt2eth    = $0 . " -in \"$in\" -out \"$out\" -childProcess";
+ 
     $text2pcap  = getText2PcapCmd(). "- ";
     $wireshark  = getWiresharkCmd();
+    $output_filewr = $out;
 
-
-    my $cmd = "./$fgt2eth | $text2pcap";
+    # my $cmd = "$fgt2eth > $output_filewr";
+    my $cmd = "$fgt2eth | $text2pcap";
 
     # Prepare output filename
     if( $out eq "-" ) {
-        $cmd .= "- | $wireshark";
+       $cmd .= "- | $wireshark";
     } else {
-        $out  = $in . ".pcap" unless $out;
-        $cmd .= " $out";
+       $out  = $in . ".pcap" unless $out;
+       $cmd .= " $out";
     }
 
     print STDERR $cmd if $debug;

@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Sniffer Output to Pcap</title>
+<title>Sniffer to PCAP Converter</title>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 {% endblock %}
 
 {% block content %}
+<header>
+  <h1> Sniffer to PCAP</h1>
+</header>
 
 <div class="table-wrapper" align="center">
-    <h1 style="text-align: center">Sniffer Output to Pcap</h1>
+    
     {%  if tasks|length < 1 %}
 
     {%  else %}
@@ -45,7 +48,13 @@
             <td title="Action">
                 <a href="/delete/{{task.id}}">Delete</a>
                 <br>
+                
 
+                
+                {%  if task.data_converted is not none %}
+                {% else %}
+                <a href="/convert/{{task.id}}">Convert</a>
+                <br>
                 <a href =""  onClick="renameFileTaskId({{task.id}})" name="id-target" data-toggle="modal" data-target="#rename-input-box">Rename</a>
                 
                 <div class="modal fade" id="rename-input-box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -61,7 +70,7 @@
                           <form method="get" id="form-content">
                             <div class="form-group">
                               <label for="label-content" class="col-form-label">New file name:</label>
-                              <textarea name="txt-content" class="form-control" id="txt-content"></textarea>
+                              <textarea cols="5" rows="1" name="txt-content" class="form-control" id="txt-content"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -71,13 +80,7 @@
                     </div>
                   </div>
                 </form>
-            
-
-
                 <br>
-                {%  if task.data_converted is not none %}
-                {% else %}
-                <a href="/convert/{{task.id}}">Convert</a>
                 {%  endif %}
             </td>
         </tr>
@@ -88,12 +91,21 @@
     {%  endif %}
 
 </div>
-<div id="sumbit_form" align="center">
-    <form action="/upload/" method="POST" enctype="multipart/form-data" id="InputForm">
-    <input type="file" id="InputFile" accept="text/*" name="InputFile" onchange="InputForm.submit()">
 
-    </form>
+<div class="mb-3">
+  <label for="formFile" class="form-label">Upload sniffer input txt file (20mb max)</label>
+  <form action="/upload/" method="POST" enctype="multipart/form-data" id="InputForm">
+  <input class="form-control" type="file" id="formFile" accept="text/*,.log" name="InputFile" onchange="InputForm.submit()">
+</form>
+
+<div class="form-group" id="process" style="display:none;">
+  <div class="progress">
+ <div class="progress-bar progress-bar-striped active bg-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" style=""></div>
+
 </div>
+</div>
+
+
 
 
 {% endblock %}
