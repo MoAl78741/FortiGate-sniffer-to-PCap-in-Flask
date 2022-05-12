@@ -25,7 +25,7 @@ def create_app():
     app.register_blueprint(convert_app.conv)
 
 
-    from .models import User, Note, Conversion
+    from .models import User, Conversion
 
     create_database(app)
 

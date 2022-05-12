@@ -36,6 +36,8 @@
 # can be opened by Wireshark. It uses the text2pcap binary included in the Ethereal package.
 # It is supplied as is and no technical support will be provided for it.
 
+## Edited down by Mo to only provide the hex text file output
+
   my $version 		      = "Sep 05 2019";
 
   use strict;
