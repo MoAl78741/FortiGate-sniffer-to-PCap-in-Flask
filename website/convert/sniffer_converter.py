@@ -45,6 +45,10 @@ class Convert2Pcap(object):
             self.num_of_packets_captured = num_packets_captured
         return True
 
+    def remove_file(self, file):
+        remove(file)
+        assert not path.isfile(file)
+
     @staticmethod
     def is_file_created(file: str) -> bool:
         timer = 30
@@ -99,7 +103,7 @@ class Convert2Pcap(object):
             log_me(logging.ERROR, f'File sniffer_input is missing')
         assert self.check_perl_exists()
         assert self.run_text_to_hex_conversion(input_filename, output_file)
-        remove(input_filename)
+        self.remove_file(input_filename)
         return output_file
 
     def convert_from_hex_to_pcap(self) -> str:
@@ -111,7 +115,7 @@ class Convert2Pcap(object):
             raise Exception('Unable to create PCAP File')
         if not path.isfile(pcap_file):
             return None
-        remove(hex_file)
+        self.remove_file(hex_file)
         return pcap_file, self.num_of_packets_captured
 
     @classmethod
