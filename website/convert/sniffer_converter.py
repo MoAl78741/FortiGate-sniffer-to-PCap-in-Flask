@@ -15,6 +15,7 @@ class Convert2Pcap(object):
         self.filename = f'{self.conv_folder}{fname}'
         self.filename_nopath = fname
         self.logs_folder = f'{self.base_path}_logs/'
+        self.num_of_packets_captured = 0
 
     def create_directories(self) -> bool:
         directories = [self.logs_folder, self.conv_folder]
@@ -34,13 +35,14 @@ class Convert2Pcap(object):
 
     def packets_captured(self, original_file: str) -> bool:
         regex_string = r"\d+ packets received by filter"
-        regex_compiled = re.compile(regex_string, re.MULTILINE)
+        regex_compiled = re.compile(regex_string)
         with open(original_file, 'r') as ofile:
             ofile_contents = ofile.read()
         regex_results = re.findall(regex_compiled, ofile_contents)
         num_packets_captured = regex_results[0].split().pop(0)
         if num_packets_captured:
             log_me(logging.INFO, f"Packets originally captured in {self.filename} is {num_packets_captured}")
+            self.num_of_packets_captured = num_packets_captured
         return True
 
     @staticmethod
@@ -110,7 +112,7 @@ class Convert2Pcap(object):
         if not path.isfile(pcap_file):
             return None
         remove(hex_file)
-        return pcap_file
+        return pcap_file, self.num_of_packets_captured
 
     @classmethod
     def run_conversion(cls, tid, cid, tuid, fname, file_to_convert) -> str:

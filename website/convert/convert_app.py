@@ -89,7 +89,7 @@ def downloadpost(id):
 def convert(id):
     task = Conversion.query.get(id)
     task_file = Conversion.query.get(id).data.decode('utf-8', errors='ignore')
-    output_file = Convert2Pcap.run_conversion(id, current_user.id, task.user_id, task.content, task_file)
+    output_file, packets_captured = Convert2Pcap.run_conversion(id, current_user.id, task.user_id, task.content, task_file)
     if not output_file:
         flash('Unable to convert your file.', category='error')
         return redirect(url_for('.upload'))
@@ -101,7 +101,7 @@ def convert(id):
             try:
                 db.session.commit()
                 os.remove(output_file)
-                flash('File converted!', category='success')
+                flash(f'Converted {packets_captured} packets to PCAP!', category='success')
                 return redirect(url_for('.upload'))
             except:
                 flash('Unable to convert your file.', category='error')
