@@ -18,6 +18,7 @@ conv = Blueprint('conv', __name__, template_folder='templates',
 @conv.route('/upload/', methods=['POST', 'GET'])
 @login_required
 def upload():
+    '''Takes in  file for upload'''
     files_table = Conversion.query.order_by(Conversion.date_created).all()
     if request.method == 'POST':
         task_content = request.files['InputFile']
@@ -35,6 +36,7 @@ def upload():
 @conv.route('/delete/<int:id>')
 @login_required
 def delete(id):
+    '''Deletes file form DB'''
     task = Conversion.query.get_or_404(id)
     if current_user.id == task.user_id:
         try:
@@ -48,6 +50,7 @@ def delete(id):
 @conv.route('/rename/', methods=['POST'])
 @login_required
 def rename():
+    '''Renames original file. Cannot be done after conversion. Uses JS to hand off id from href.'''
     task = json.loads(request.data)
     taskId = task['id']
     newName = task['newname']
@@ -65,6 +68,7 @@ def rename():
 @conv.route('/downloadpre/<int:id>', methods=['GET'])
 @login_required
 def downloadpre(id):
+    '''Download original file from DB'''
     task = Conversion.query.get_or_404(id)
     if current_user.id == task.user_id:
         try:
@@ -76,6 +80,7 @@ def downloadpre(id):
 @conv.route('/downloadpost/<int:id>', methods=['GET'])
 @login_required
 def downloadpost(id):
+    '''Download converter pcap file'''
     task = Conversion.query.get(id)
     if current_user.id == task.user_id:
         try:
@@ -87,6 +92,7 @@ def downloadpost(id):
 @conv.route('/convert/<int:id>', methods=['GET'])
 @login_required
 def convert(id):
+    '''Kicks off conversion and uploads to DB'''
     task = Conversion.query.get(id)
     task_file = Conversion.query.get(id).data.decode('utf-8', errors='ignore')
     output_file, packets_captured = Convert2Pcap.run_conversion(id, current_user.id, task.user_id, task.content, task_file)
@@ -110,6 +116,7 @@ def convert(id):
 
 @conv.route('/converted/<int:id>', methods=['GET'])
 def converted(id):
+    '''Provides converted PCAP files'''
     task = Conversion.query.get_or_404(id)
     if task.data_converted:
         return task.data_converted
