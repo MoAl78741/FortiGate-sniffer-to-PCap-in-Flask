@@ -18,6 +18,7 @@ class Convert2Pcap(object):
         self.num_of_packets_captured = 0
 
     def create_directories(self) -> bool:
+        '''Creates and checks for directories'''
         directories = [self.logs_folder, self.conv_folder]
         [makedirs(x, exist_ok=True) for x in directories]
         for dir in directories:
@@ -26,6 +27,7 @@ class Convert2Pcap(object):
             return True
   
     def writeout_file(self, file_name: str, file_content: str) -> bool:
+        '''Writes out file to disk for processing'''
         with open(file_name, 'w') as output_file:
             for line in file_content.splitlines():
                 output_file.write(f'{line}\n')
@@ -34,6 +36,7 @@ class Convert2Pcap(object):
         return True
 
     def packets_captured(self, original_file: str) -> bool:
+        '''Returns number of packets originally received by filter'''
         regex_string = r"\d+ packets received by filter"
         regex_compiled = re.compile(regex_string)
         with open(original_file, 'r') as ofile:
@@ -46,11 +49,13 @@ class Convert2Pcap(object):
         return True
 
     def remove_file(self, file):
+        '''Removes files from disk'''
         remove(file)
         assert not path.isfile(file)
 
     @staticmethod
     def is_file_created(file: str) -> bool:
+        '''Loops for 60sec checking for file on disk'''
         timer = 30
         while not path.isfile(file):
                     sleep(2)
@@ -62,6 +67,7 @@ class Convert2Pcap(object):
         return True    
 
     def check_perl_exists(self) -> bool:
+        '''Checks if perl is installed on system'''
         perl_version = str(check_output(['perl', '-v', '|', 'grep', 'version']),)
         if 'version' not in perl_version:
             log_me(logging.ERROR, f'Missing Perl from system. Please install Perl before running.')
@@ -69,6 +75,7 @@ class Convert2Pcap(object):
         return True
     
     def run_text_to_hex_conversion(self, input_filename: str, output_file: str) -> bool:
+        '''Runs original file against fgt2eth[x].pl to convert to a hex text file'''
         pexec = run(["perl", "website/convert/fgt2eth2.pl", "-in", input_filename], capture_output=True)
         hex_resultsc = pexec.stdout.decode()
         assert self.writeout_file(output_file, hex_resultsc)
@@ -81,6 +88,7 @@ class Convert2Pcap(object):
         return True
 
     def run_hex_to_pcap_conversion(self, hex_file: str, pcap_file: str) -> bool:
+        '''Runs hex text file against text2pcap for pcap conversion'''
         if not hex_file:
             raise Exception('Hex pcap text file does not exist')
         if not path.isfile(hex_file):
@@ -89,9 +97,9 @@ class Convert2Pcap(object):
         if pexec.returncode != 0:
             raise Exception("Unable to convert hex filet to PCAP file.")
         return True     
-
  
     def text_to_hex_capture(self) -> str:
+        '''Does the work for text to hex'''
         created_directories = self.create_directories()
         original_file = self.writeout_file(self.filename, self.file_to_convert)
         assert self.packets_captured(self.filename)
@@ -107,6 +115,7 @@ class Convert2Pcap(object):
         return output_file
 
     def convert_from_hex_to_pcap(self) -> str:
+        '''Does the work for hex to pcap'''
         hex_file = self.text_to_hex_capture()
         pcap_file = f'{self.conv_folder}task{self.taskid}_user{self.currentuserid}_{self.filename_nopath}.pcap'
         assert self.run_hex_to_pcap_conversion(hex_file, pcap_file)
@@ -120,5 +129,5 @@ class Convert2Pcap(object):
 
     @classmethod
     def run_conversion(cls, tid, cid, tuid, fname, file_to_convert) -> str:
+        '''Used to execute the class'''
         return cls(tid, cid, tuid, fname, file_to_convert).convert_from_hex_to_pcap()
-
