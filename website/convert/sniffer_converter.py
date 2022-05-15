@@ -42,6 +42,8 @@ class Convert2Pcap(object):
         with open(original_file, 'r') as ofile:
             ofile_contents = ofile.read()
         regex_results = re.findall(regex_compiled, ofile_contents)
+        if not regex_results:
+            return None
         num_packets_captured = regex_results[0].split().pop(0)
         if num_packets_captured:
             log_me(logging.INFO, f"Packets originally captured in {self.filename} is {num_packets_captured}")
