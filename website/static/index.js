@@ -1,6 +1,6 @@
 
 
-// <-- Rename a task 
+//rename task 
 let renameTaskId; 
 
 function renameFile() {
@@ -17,7 +17,6 @@ function renameFile() {
 function renameFileTaskId(id) {
   renameTaskId = id;
 }
-// Rename a task -->
 
 
 //banner
