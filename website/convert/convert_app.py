@@ -1,4 +1,3 @@
-from tkinter.tix import FileSelectBox
 from flask import Flask, Blueprint, render_template, request, redirect, send_file, flash, url_for
 from flask_login import login_required, current_user
 from io import BytesIO
