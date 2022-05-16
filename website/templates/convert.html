@@ -38,7 +38,7 @@
                 </a></td>
             <td title="PCAP File">
             {%  if task.data_converted is none %}
-            <a href="/convert/{{task.id}}">
+            <a href="/convert/{{task.id}}" onclick="document.body.style.cursor='wait'; return true;">
                 Click to Convert </a>
             {%  else %}
             <a href="/downloadpost/{{task.id}}">
@@ -97,13 +97,8 @@
   <form action="/upload/" method="POST" enctype="multipart/form-data" id="InputForm">
   <input class="form-control" type="file" id="formFile" accept="text/*,.log" name="InputFile" onchange="InputForm.submit()">
 </form>
-
-<div class="form-group" id="process" style="display:none;">
-  <div class="progress">
- <div class="progress-bar progress-bar-striped active bg-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" style=""></div>
-
 </div>
-</div>
+
 
 
 
