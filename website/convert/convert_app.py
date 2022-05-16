@@ -24,7 +24,6 @@ def upload():
     files_table = Conversion.query.order_by(Conversion.date_created).all()
     if request.method == 'POST':
         files = request.files.getlist('InputFiles[]')
-        print(files)
         for f in files:
             task_content = f
             task_content.filename = sub('[^A-Za-z0-9\.]+', '', task_content.filename)
