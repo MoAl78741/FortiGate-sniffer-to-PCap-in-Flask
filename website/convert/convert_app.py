@@ -19,7 +19,8 @@ conv = Blueprint('conv', __name__, template_folder='templates',
 @conv.route('/upload/', methods=['POST', 'GET'])
 @login_required
 def upload():
-    '''Takes in  file for upload'''
+    '''Takes in  file for upload
+    https://plugins.krajee.com/file-input#form-submission'''
     files_table = Conversion.query.order_by(Conversion.date_created).all()
     if request.method == 'POST':
         files = request.files.getlist('InputFiles[]')
