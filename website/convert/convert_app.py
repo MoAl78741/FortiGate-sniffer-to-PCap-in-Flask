@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, request, redirect, send_file, flash, jsonify, url_for
+from flask import Flask, Blueprint, render_template, request, redirect, send_file, flash, url_for
 from flask_login import login_required, current_user
 from io import BytesIO
 from .sniffer_converter import Convert2Pcap
@@ -30,7 +30,8 @@ def upload():
             flash('File added!', category='success')
             return redirect(url_for('.upload'))
         except:
-            return jsonify({'Issue adding your sniffer to table'})
+            flash('Issue adding your sniffer to table', category='error')
+            return redirect(url_for('.upload'))
     else:
         return render_template('convert.html', tasks=files_table, user=current_user)
 
@@ -46,7 +47,8 @@ def delete(id):
             flash('File deleted!', category='success')
             return redirect(url_for('.upload'))
         except:
-            return jsonify({"Could not delete task"})
+            flash('Could not delete task', category='error')
+            return redirect(url_for('.upload'))
 
 @conv.route('/rename/', methods=['POST'])
 @login_required
@@ -65,6 +67,7 @@ def rename():
             task.content = newName
             db.session.commit()
             flash('File renamed!', category='success')
+            return redirect(url_for('.upload'))
         except:
             flash('Could not rename file.', category='error')
             return redirect(url_for('.upload'))
@@ -80,7 +83,7 @@ def downloadpre(id):
             return send_file(BytesIO(task.data), attachment_filename=task.content, as_attachment=True)
         except:
             flash('Could not return file.', category='error')
-            return jsonify({"Could not return task"})
+            return redirect(url_for('.upload'))
 
 @conv.route('/downloadpost/<int:id>', methods=['GET'])
 @login_required
@@ -92,7 +95,7 @@ def downloadpost(id):
             return send_file(BytesIO(task.data_converted), attachment_filename=f'{task.content}.pcap', as_attachment=True)
         except:
             flash('Could not return file.', category='error')
-            return jsonify({"Could not return task"})
+            return redirect(url_for('.upload'))
 
 @conv.route('/convert/<int:id>', methods=['GET'])
 @login_required
@@ -127,5 +130,5 @@ def converted(id):
         return task.data_converted
     else:
         flash('Could not convert your file.', category='error')
-        return jsonify({'File has not been converted'})
+        return redirect(url_for('.upload'))
 
