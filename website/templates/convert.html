@@ -60,17 +60,10 @@
                 <div class="modal fade" id="rename-input-box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">Rename File</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
                         <div class="modal-body">
                           <form method="get" id="form-content">
                             <div class="form-group">
-                              <label for="label-content" class="col-form-label">New file name:</label>
-                              <textarea cols="5" rows="1" name="txt-content" class="form-control" id="txt-content"></textarea>
+                              <textarea cols="5" rows="1" name="txt-content" class="form-control" id="txt-content" maxlength="20" placeholder="20 character limit"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">

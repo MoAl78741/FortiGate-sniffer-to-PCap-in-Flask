@@ -4,6 +4,7 @@ from io import BytesIO
 from .sniffer_converter import Convert2Pcap
 from ..models import Conversion
 from .. import db
+from re import sub
 import json
 import os
 
@@ -54,6 +55,10 @@ def rename():
     task = json.loads(request.data)
     taskId = task['id']
     newName = task['newname']
+    if not newName:
+        flash('Missing filename', category='error')
+        return redirect(url_for('.upload'))
+    newName = sub('[^A-Za-z0-9\.]+', '', newName)
     task = Conversion.query.get_or_404(taskId)
     if current_user.id == task.user_id:
         try:
@@ -62,7 +67,7 @@ def rename():
             flash('File renamed!', category='success')
         except:
             flash('Could not rename file.', category='error')
-            return jsonify({'Could not rename file'})
+            return redirect(url_for('.upload'))
     
 
 @conv.route('/downloadpre/<int:id>', methods=['GET'])

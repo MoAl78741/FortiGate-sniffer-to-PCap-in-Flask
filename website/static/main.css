@@ -14,11 +14,11 @@ header {
   margin: 0;
 }
 
-.modal-body .form-control {
-  height: 5vh;
+.textarea {
+  height: 1vh;
   resize: none;
   white-space: nowrap;
-  overflow-x: scroll;
+  overflow: hidden;
 }
 
 header h1 {
