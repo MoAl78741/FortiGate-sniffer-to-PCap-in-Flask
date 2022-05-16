@@ -27,3 +27,8 @@ $("textarea").keydown(function(e){
       e.preventDefault();
   }
 });
+
+//dropzone
+$(document).ready(function() {
+  $("#input-b5").fileinput({showCaption: false, dropZoneEnabled: false});
+});

@@ -2,7 +2,8 @@
 
 {% block head %}
 <title>Sniffer to PCAP Converter</title>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
 
 {% endblock %}
 
@@ -10,6 +11,9 @@
 <header>
   <h1> Sniffer to PCAP</h1>
 </header>
+
+
+
 
 <div class="table-wrapper" align="center">
     
@@ -21,7 +25,7 @@
        <thead>
         <tr>
             <th scope="col">Date Added</th>
-            <th scope="col">File Name</th>
+            <!-- <th scope="col">File Name</th> -->
             <th scope="col">PreConverted File</th>
             <th scope="col">PCAP File</th>
             <th scope="col">Actions</th>
@@ -32,22 +36,34 @@
 
         <tr>
             <td title="Date Added">{{ task.date_created.date() }}</td>
-            <td title="File Name">{{  task.content }}</td>
+            <!-- <td title="File Name">{{  task.content }}</td> -->
             <td title="PreConverted File"><a href="/downloadpre/{{task.id}}">
-                 {{ task.content }}
-                </a></td>
+              <span class="material-symbols-outlined" title="Download original file">
+                file_download
+                </span>
+                </a>{{ task.content }}</td>
             <td title="PCAP File">
             {%  if task.data_converted is none %}
             <a href="/convert/{{task.id}}" onclick="document.body.style.cursor='wait'; return true;">
-                Click to Convert </a>
+              <span class="material-symbols-outlined" title="Convert original to PCAP File">
+                transform
+                </span>
+                </a>
+              
             {%  else %}
             <a href="/downloadpost/{{task.id}}">
-            Download PCAP</a>
+              <span class="material-symbols-outlined" title="Download PCAP file">
+                description
+                </span>
+               </a>
             {%  endif %}</td>
 
             <td title="Action">
-                <a href="/delete/{{task.id}}">Delete</a>
-                <br>
+                <a href="/delete/{{task.id}}">
+                <span class="material-symbols-outlined" title="Delete File">
+                  delete_forever
+                  </span></a>
+
                 
 
                 
@@ -55,7 +71,11 @@
                 {% else %}
 
 
-                <a href =""  onClick="renameFileTaskId({{task.id}})" name="id-target" data-toggle="modal" data-target="#rename-input-box">Rename</a>
+                <a href =""  onClick="renameFileTaskId({{task.id}})" name="id-target" data-toggle="modal" data-target="#rename-input-box">
+                  <span class="material-symbols-outlined" title="Rename File">
+                    edit
+                    </span>
+                </a>
                 
                 <div class="modal fade" id="rename-input-box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -85,11 +105,23 @@
 
 </div>
 
-<div class="mb-3">
-  <label for="formFile" class="form-label">Upload sniffer input txt file (20mb max)</label>
+<!-- <div class="mb-3"> -->
+  <!-- <label for="formFile" class="form-label">Upload sniffer input txt file (20mb max)
+
+
+  </label>
   <form action="/upload/" method="POST" enctype="multipart/form-data" id="InputForm">
   <input class="form-control" type="file" id="formFile" accept="text/*,.log" name="InputFile" onchange="InputForm.submit()">
+</form> -->
+
+<div>
+<label class="control-label">Select File</label>
+<form action="/upload/" method="POST" enctype="multipart/form-data" id="InputForm">
+<input id="input-b1" name="InputFiles[]" type="file" class="file" data-preview-file-type="text" multiple data-allowed-file-extensions='["log", "txt"]' data-browse-on-zone-click="true">
 </form>
+
+
+
 </div>
 
 

@@ -1,3 +1,4 @@
+from tkinter.tix import FileSelectBox
 from flask import Flask, Blueprint, render_template, request, redirect, send_file, flash, url_for
 from flask_login import login_required, current_user
 from io import BytesIO
@@ -22,16 +23,20 @@ def upload():
     '''Takes in  file for upload'''
     files_table = Conversion.query.order_by(Conversion.date_created).all()
     if request.method == 'POST':
-        task_content = request.files['InputFile']
-        try:
-            new_task = Conversion(content=task_content.filename, data=task_content.read(), user_id=current_user.id)
-            db.session.add(new_task)
-            db.session.commit()
-            flash('File added!', category='success')
-            return redirect(url_for('.upload'))
-        except:
-            flash('Issue adding your sniffer to table', category='error')
-            return redirect(url_for('.upload'))
+        files = request.files.getlist('InputFiles[]')
+        print(files)
+        for f in files:
+            task_content = f
+            task_content.filename = sub('[^A-Za-z0-9\.]+', '', task_content.filename)
+            try:
+                new_task = Conversion(content=task_content.filename, data=task_content.read(), user_id=current_user.id)
+                db.session.add(new_task)
+                db.session.commit()
+            except:
+                flash('Issue adding your sniffer to table', category='error')
+                return redirect(url_for('.upload'))
+        flash('File added!', category='success')
+        return redirect(url_for('.upload'))
     else:
         return render_template('convert.html', tasks=files_table, user=current_user)
 

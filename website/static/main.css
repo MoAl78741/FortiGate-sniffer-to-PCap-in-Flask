@@ -43,3 +43,13 @@ header h1 {
   90%{ width: 0ch;} /*Text is deleted*/
   100%{ width: 0ch;} /*Text stays hidden*/
 }
+
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 200,
+  'GRAD' 200,
+  'opsz' 40
+}
+
