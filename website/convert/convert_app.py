@@ -26,7 +26,7 @@ def upload():
         files = request.files.getlist('InputFiles[]')
         for f in files:
             task_content = f
-            task_content.filename = sub('[^A-Za-z0-9\.]+', '', task_content.filename)
+            task_content.filename = sub('[^A-Za-z0-9\.\_\-]+', '', task_content.filename)
             try:
                 new_task = Conversion(content=task_content.filename, data=task_content.read(), user_id=current_user.id)
                 db.session.add(new_task)
@@ -64,7 +64,7 @@ def rename():
     if not newName:
         flash('Missing filename', category='error')
         return redirect(url_for('.upload'))
-    newName = sub('[^A-Za-z0-9\.]+', '', newName)
+    newName = sub('[^A-Za-z0-9\.\_\-]+', '', newName)
     task = Conversion.query.get_or_404(taskId)
     if current_user.id == task.user_id:
         try:
