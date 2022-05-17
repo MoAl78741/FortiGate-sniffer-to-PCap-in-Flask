@@ -1,3 +1,4 @@
+# docker build -t sniffer2pcap .
 FROM ubuntu
 
 COPY . /app
