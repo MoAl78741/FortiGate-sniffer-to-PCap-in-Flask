@@ -15,7 +15,7 @@ class Convert2Pcap(object):
         self.filename = f'{self.conv_folder}{fname}'
         self.filename_nopath = fname
         self.logs_folder = f'{self.base_path}_logs/'
-        self.num_of_packets_captured = 0
+        self.num_of_packets_captured = ''
 
     def create_directories(self) -> bool:
         '''Creates and checks for directories'''
@@ -104,7 +104,7 @@ class Convert2Pcap(object):
         '''Does the work for text to hex'''
         created_directories = self.create_directories()
         original_file = self.writeout_file(self.filename, self.file_to_convert)
-        assert self.packets_captured(self.filename)
+        self.packets_captured(self.filename)
         if not created_directories or not original_file:
             raise Exception(f'Something went wrong with file or directories. Cannot continue.')
         input_filename = self.filename
