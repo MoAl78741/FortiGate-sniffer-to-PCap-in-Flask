@@ -1,0 +1,15 @@
+# docker build -t sniffer2pcap -f Dockerfile.alpine .
+# docker run -p 127.0.0.1:5001:5000/tcp --name sniffer2pcap sniffer2pcap
+
+FROM alpine:latest
+
+COPY . /app
+
+WORKDIR /app
+
+RUN apk add --update build-base python3-dev py3-pip perl wireshark-common
+RUN pip3 install -r requirements.txt
+
+EXPOSE 5000
+ENTRYPOINT [ "python3" ]
+CMD [ "-m", "flask", "run", "--host=0.0.0.0" ]
