@@ -19,7 +19,7 @@ function renameFileTaskId(id) {
 }
 
 
-//banner
+//prevent enter key in textbox
 $("textarea").keydown(function(e){
   // Enter pressed
   if (e.keyCode == 13)
