@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  sniffer2pcap:
+    build:
+      context: .
+      dockerfile: Dockerfile.alpine
+    ports:
+      - "127.0.0.1:5001:5000"
+    container_name: sniffer2pcap
