@@ -3,13 +3,22 @@
 
 FROM alpine:latest
 
+# Copy application files
 COPY . /app
 
+# Set working directory
 WORKDIR /app
 
-RUN apk add --update build-base python3-dev py3-pip perl wireshark-common
-RUN pip3 install -r requirements.txt
+# Install necessary packages and Python dependencies
+RUN apk add --no-cache python3 py3-pip py3-setuptools build-base \
+    libffi-dev openssl-dev
 
+# Install Python dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Expose the application port
 EXPOSE 5000
+
+# Define the entry point
 ENTRYPOINT [ "python3" ]
 CMD [ "-m", "flask", "run", "--host=0.0.0.0" ]
