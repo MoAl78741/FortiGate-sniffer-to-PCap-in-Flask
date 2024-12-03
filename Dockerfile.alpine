@@ -10,19 +10,11 @@ COPY . /app
 WORKDIR /app
 
 # Install necessary packages and Python dependencies
-RUN apk add --no-cache \
-    build-base \
-    python3-dev \
-    py3-pip \
-    perl \
-    wireshark-common \
-    gcc \
-    musl-dev \
-    libffi-dev \
-    openssl-dev
+RUN apk add --no-cache python3 py3-pip py3-setuptools build-base \
+    libffi-dev openssl-dev
 
 # Install Python dependencies
-RUN python -m pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --break-system-packages --no-cache-dir -r requirements.txt
 
 # Expose the application port
 EXPOSE 5000
