@@ -1,7 +1,7 @@
 # docker build -t sniffer2pcap -f Dockerfile.alpine .
 # docker run -p 127.0.0.1:5001:5000/tcp --name sniffer2pcap sniffer2pcap
 
-FROM alpine:latest
+FROM python:3.6-alpine
 
 # Copy application files
 COPY . /app
@@ -10,11 +10,11 @@ COPY . /app
 WORKDIR /app
 
 # Install necessary packages and Python dependencies
-RUN apk add --no-cache python3 py3-pip py3-setuptools build-base \
-    libffi-dev openssl-dev
+RUN apk add --no-cache build-base libffi-dev openssl-dev
+
 
 # Install Python dependencies
-RUN pip3 install --break-system-packages --no-cache-dir -r requirements.txt
+RUN pip install --break-system-packages --no-cache-dir -r requirements.txt
 
 # Expose the application port
 EXPOSE 5000
