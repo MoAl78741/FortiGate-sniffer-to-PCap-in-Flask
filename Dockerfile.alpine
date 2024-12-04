@@ -2,7 +2,7 @@
 # docker run -p 127.0.0.1:5001:5000/tcp --name sniffer2pcap sniffer2pcap
 
 # Use Alpine Linux with Python 3 as the base image
-FROM python:3.6-alpine
+FROM python:3.7-alpine
 
 # Set environment variables to prevent Python from buffering stdout/stderr
 ENV PYTHONDONTWRITEBYTECODE 1
