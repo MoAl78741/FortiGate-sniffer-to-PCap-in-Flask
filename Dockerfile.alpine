@@ -1,24 +1,32 @@
 # docker build -t sniffer2pcap -f Dockerfile.alpine .
 # docker run -p 127.0.0.1:5001:5000/tcp --name sniffer2pcap sniffer2pcap
 
+# Use Alpine Linux with Python 3 as the base image
 FROM python:3.6-alpine
 
-# Copy application files
-COPY . /app
+# Set environment variables to prevent Python from buffering stdout/stderr
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# Set working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Install necessary packages and Python dependencies
-RUN apk update && apk --no-cache --update-cache add build-base libffi-dev openssl-dev
+# Copy the requirements file to the container
+COPY requirements.txt /app/
 
+# Install dependencies
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev openssl-dev && \
+    pip install --no-cache-dir -r requirements.txt && \
+    apk del .build-deps
 
-# Install Python dependencies
-RUN pip install -U pip && pip install -r requirements.txt
+# Copy the application code to the container
+COPY . /app/
 
 # Expose the application port
 EXPOSE 5000
 
 # Define the entry point
-ENTRYPOINT [ "python3" ]
-CMD [ "-m", "flask", "run", "--host=0.0.0.0" ]
+ENTRYPOINT ["python3"]
+
+# Run Flask application
+CMD ["-m", "flask", "run", "--host=0.0.0.0"]
