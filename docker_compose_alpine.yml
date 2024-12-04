@@ -1,8 +1,14 @@
+version: '3.8'
+
 services:
-  sniffer2pcap:
+  flask-app:
+    container_name: flask-app
     build:
       context: .
-      dockerfile: Dockerfile.alpine
     ports:
-      - "127.0.0.1:5001:5000"
-    container_name: sniffer2pcap
+      - "5000:5000" # Map host port 5000 to container port 5000
+    environment:
+      FLASK_APP: "app.py"       # Set the main Flask app file
+      FLASK_ENV: "production"   # Set Flask environment
+    volumes:
+      - .:/app # Mount the current directory to the container
