@@ -1,0 +1,23 @@
+# Ignore version control and Git-specific files
+.git
+.gitignore
+
+# Ignore Python cache files and folders
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore IDE/editor files
+*.idea
+*.vscode
+
+# Ignore Docker-specific files you don't need in the image
+docker_compose_alpine.yml
+.dockerignore
+
+# Ignore temporary files or logs
+*.log
+*.tmp
+
+# Ignore local environment files
+*.env
