@@ -12,7 +12,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Copy the requirements file to the container
-COPY requirements.txt /app/
+COPY app/requirements.txt /app/
 
 # Install dependencies
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev openssl-dev && \
@@ -20,7 +20,7 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev openssl-dev
     apk del .build-deps
 
 # Copy the application code to the container
-COPY . /app/
+COPY app/ /app/
 
 # Expose the application port
 EXPOSE 5000
