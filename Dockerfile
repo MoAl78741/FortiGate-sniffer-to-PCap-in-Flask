@@ -4,6 +4,7 @@ FROM python:3.12-alpine
 # Set environment variables to prevent Python from buffering stdout/stderr
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV FLASK_APP=app.py
 
 # Set the working directory in the container
 WORKDIR /app
