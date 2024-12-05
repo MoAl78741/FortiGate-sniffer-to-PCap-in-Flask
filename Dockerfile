@@ -5,6 +5,7 @@ FROM python:3.12-alpine
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
 
 # Set the working directory in the container
 WORKDIR /app
@@ -28,4 +29,4 @@ EXPOSE 5000
 ENTRYPOINT ["python3"]
 
 # Run Flask application
-CMD ["-m", "flask", "run", "--host=0.0.0.0"]
+CMD ["flask", "run"]
