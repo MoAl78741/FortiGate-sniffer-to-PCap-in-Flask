@@ -21,3 +21,6 @@ docker_compose_alpine.yml
 
 # Ignore local environment files
 *.env
+
+# Ignore non Alpine dockerfile
+Dockerfile
