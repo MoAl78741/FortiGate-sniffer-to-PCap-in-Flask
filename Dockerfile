@@ -26,8 +26,5 @@ COPY . .
 # Expose the application port
 EXPOSE 5000
 
-# Define the entry point
-ENTRYPOINT ["python3"]
-
 # Run Flask application
-CMD ["flask", "run"]
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
