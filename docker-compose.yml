@@ -8,5 +8,5 @@ services:
     environment:
       FLASK_APP: "app.py"       # Set the main Flask app file
       FLASK_ENV: "production"   # Set Flask environment
-    volumes:
-      - .:/app # Mount the current directory to the container
+#    volumes:
+#      - .:/app # Mount the current directory to the container
