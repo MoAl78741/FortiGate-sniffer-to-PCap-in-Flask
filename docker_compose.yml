@@ -1,6 +1,6 @@
 services:
   flask-app:
-    container_name: flask-app
+    container_name: sniffer2pcap
     build:
       context: .
     ports:
