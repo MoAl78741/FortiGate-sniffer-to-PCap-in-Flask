@@ -16,8 +16,9 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev openssl-dev
     pip install --no-cache-dir -r requirements.txt && \
     apk del .build-deps
 
-Copy the application code to the container
-COPY website/ /app/
+# Copy the application code to the container
+COPY . /app/ 
+COPY website/ /app/website/
 
 # Expose the application port
 EXPOSE 5000
