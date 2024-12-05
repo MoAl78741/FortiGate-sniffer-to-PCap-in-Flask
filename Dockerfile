@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 # Copy the requirements file to the container
-COPY requirements.txt /app/
+#COPY requirements.txt /app/
 
 # Install dependencies
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev openssl-dev && \
