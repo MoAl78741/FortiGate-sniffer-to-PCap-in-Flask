@@ -28,8 +28,6 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev openssl-dev
     apk del .build-deps
 
 # Copy the application code to the container
-#COPY . /app/ 
-#COPY website/ /app/website/
 COPY . .
 
 # Expose the application port
