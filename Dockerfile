@@ -13,8 +13,9 @@ RUN apk update && \
     perl -v
 
 # Install wireshark-common
-RUN apk add --no-cache wireshark-common && \
-    text2pcap -v
+RUN apk update && \
+		apk add --no-cache wireshark-common && \
+		text2pcap -v
 
 # Set the working directory in the container
 WORKDIR /app
