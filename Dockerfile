@@ -7,6 +7,12 @@ ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
+# Install Perl
+RUN apk update && \
+    apk add --no-cache perl && \
+    perl -v
+
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -15,8 +21,6 @@ COPY requirements.txt /app/
 
 # Install dependencies
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev openssl-dev && \
-    apk add --no-cache perl && \
-    perl -v && \
     pip install --no-cache-dir -r requirements.txt && \
     apk del .build-deps
 
